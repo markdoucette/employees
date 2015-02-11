@@ -72,6 +72,11 @@
                             <td></td>
                             <td><input type="submit" name="find" value="Find Employee"/></td>
                         </tr>
+                        <tr><td colspan="2">
+                            <c:if test="${not empty foundEmp}">
+                                <c:out value="Found ${foundEmp.firstName} ${foundEmp.lastName}"/>
+                            </c:if>
+                        </td> </tr>
                     </table>
                 </form>
             </div>

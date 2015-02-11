@@ -1,6 +1,7 @@
 package ca.bcit.a00057006.jpa.entity;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.sql.Date;
 
 /**
@@ -20,6 +21,7 @@ public class Employee {
     private String id;
 
     @Column
+    @NotNull
     private String firstName;
 
     @Column

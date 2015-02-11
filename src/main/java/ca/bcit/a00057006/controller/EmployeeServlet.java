@@ -53,6 +53,10 @@ public class EmployeeServlet extends HttpServlet {
          */
         if (null != request.getParameter("find")) {
             String id = request.getParameter("id");
+            Employee foundEmp = employeeFacade.getEmployeeById(id);
+            if (null != foundEmp) {
+                request.setAttribute("foundEmp", foundEmp);
+            }
             System.out.println("Found: " + employeeFacade.getEmployeeById(id));
         }
 
