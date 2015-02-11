@@ -63,4 +63,17 @@ public class EmployeeFacade {
         query.setParameter("id", id);
         return query.getSingleResult();
     }
+
+    /**
+     * Remove a single Employee from the database
+     * @param id the id to use as a search criteria
+     */
+    public void removeEmployeeById(String id) {
+        // use the findById query to first retrieve the Employee
+        Employee employee = getEmployeeById(id);
+
+        entityManager.getTransaction().begin();
+        entityManager.remove(employee);
+        entityManager.getTransaction().commit();
+    }
 }

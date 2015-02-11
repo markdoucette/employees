@@ -58,6 +58,14 @@ public class EmployeeServlet extends HttpServlet {
             System.out.println("Found: " + employeeFacade.getEmployeeById(id));
         }
 
+        /*
+        Handle the 'remove employee' use case
+         */
+        if (null != request.getParameter("remove")) {
+            String id = request.getParameter("id");
+            // remove the Employee
+            employeeFacade.removeEmployeeById(id);
+        }
 
         List<Employee> employees = employeeFacade.getEmployees();
         request.getSession().setAttribute("employees", employees); // add List to session to be displayed in index.jsp
