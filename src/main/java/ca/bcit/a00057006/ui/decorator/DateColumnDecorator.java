@@ -14,12 +14,12 @@ import java.text.SimpleDateFormat;
  * @author Mark Doucette
  */
 public class DateColumnDecorator implements DisplaytagColumnDecorator {
-    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy / MM / dd");
+    public final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy / MM / dd");
 
     @Override
     public Object decorate(Object columnVal, PageContext pageContext, MediaTypeEnum mediaTypeEnum) throws DecoratorException {
         Date date = (Date)columnVal;
 
-        return this.dateFormat.format(date);
+        return this.DATE_FORMAT.format(date);
     }
 }
