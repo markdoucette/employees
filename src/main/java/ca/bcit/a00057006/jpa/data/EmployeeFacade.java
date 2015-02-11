@@ -10,6 +10,7 @@ import java.util.List;
 
 /**
  * Facade for the employee persistence unit
+ *
  * @author Mark Doucette
  */
 public class EmployeeFacade {
@@ -25,6 +26,7 @@ public class EmployeeFacade {
 
     /**
      * get an instance of the Employee Facade as a singleton, synchronized for thread safety
+     *
      * @return EmployeeFacade instance
      */
     public static synchronized EmployeeFacade getInstance() {
@@ -37,6 +39,7 @@ public class EmployeeFacade {
 
     /**
      * Get a list of all Employees in the A00057006_Employee table
+     *
      * @return a List<Employee>
      */
     public List<Employee> getEmployees() {
@@ -45,9 +48,10 @@ public class EmployeeFacade {
 
     /**
      * Add an Employee to the database by simply persisting the object
+     *
      * @param emp the Employee to persist
      */
-    public void addEmployee(Employee emp){
+    public void addEmployee(Employee emp) {
         entityManager.getTransaction().begin();
         entityManager.persist(emp);
         entityManager.getTransaction().commit();
@@ -55,6 +59,7 @@ public class EmployeeFacade {
 
     /**
      * Get a single Employee identified by id
+     *
      * @param id the id to use as search criteria
      * @return the found Employee
      */
@@ -66,6 +71,7 @@ public class EmployeeFacade {
 
     /**
      * Remove a single Employee from the database
+     *
      * @param id the id to use as a search criteria
      */
     public void removeEmployeeById(String id) {

@@ -9,10 +9,11 @@ import java.sql.Date;
  *
  * @author Mark Doucette
  */
-@Entity(name = "A00057006_Employee")
+@Entity
+@Table(name = "A00057006_Employee")
 @NamedQueries({
-        @NamedQuery(name = "Employee.getEmployees", query = "select e from A00057006_Employee e"),
-        @NamedQuery(name = "Employee.findById", query = "select e from A00057006_Employee e where e.id = :id")
+        @NamedQuery(name = "Employee.getEmployees", query = "select e from Employee e"),
+        @NamedQuery(name = "Employee.findById", query = "select e from Employee e where e.id = :id")
 })
 public class Employee {
     @Id
@@ -26,8 +27,6 @@ public class Employee {
 
     @Column
     private Date dateOfBirth;
-
-//    private java.util.Date utilDate;
 
     public Employee() {
     }

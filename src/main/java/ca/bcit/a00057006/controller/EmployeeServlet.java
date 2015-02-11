@@ -23,8 +23,6 @@ public class EmployeeServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         EmployeeFacade employeeFacade = EmployeeFacade.getInstance();
 
-
-
         /*
         Handle the 'add employee' use case to persist a new Employee to the database.
          */
