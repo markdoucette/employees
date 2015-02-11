@@ -41,7 +41,7 @@
                 <tr><td><label>First Name:</label></td><td><input type="text" name="firstName" /></td></tr>
                 <tr><td><label>Last Name:</label></td><td><input type="text" name="lastName" /></td></tr>
                 <tr><td><label>Date of Birth:</label></td><td><input type="text" name="dob" /></td></tr>
-                <tr><td> </td><td><input type="submit" name="add" value="Add Employees" /></td></tr>
+                <tr><td> </td><td><input type="submit" name="add" value="Add Employee" /></td></tr>
             </table>
                 </form>
             </div>

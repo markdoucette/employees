@@ -23,19 +23,19 @@ public class EmployeeServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         EmployeeFacade employeeFacade = EmployeeFacade.getInstance();
 
-        List<Employee> employees = employeeFacade.getEmployees();
 
-        for (Employee emp : employees) {
-            System.out.println(emp);
-        }
 
+        /*
+        Handle the 'add employee' use case to persist a new Employee to the database.
+         */
         if (null != request.getParameter("add")) {
             String id = request.getParameter("id");
             String firstName = request.getParameter("firstName");
             String lastName = request.getParameter("lastName");
             Date date = null;
             try {
-              date = new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("dob"));
+                // convert input to SimpleDateFormat to be used with Date
+                date = new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("dob"));
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -44,12 +44,24 @@ public class EmployeeServlet extends HttpServlet {
             emp.setId(id);
             emp.setFirstName(firstName);
             emp.setLastName(lastName);
+            // Date must be converted to java.sql.Date for compliance with ms-sql Date type
             emp.setDateOfBirth(new java.sql.Date(date.getTime()));
 
             employeeFacade.addEmployee(emp);
         }
 
-        request.getSession().setAttribute("employees", employees);
+        /*
+        Handle the 'find employee' use case
+         */
+        if (null != request.getParameter("find")) {
+            String id = request.getParameter("id");
+        }
+
+        List<Employee> employees = employeeFacade.getEmployees();
+        for (Employee emp : employees) { // just for testing print to JBoss console
+            System.out.println(emp);
+        }
+        request.getSession().setAttribute("employees", employees); // add List to session to be displayed in index.jsp
         request.getRequestDispatcher("/index.jsp").forward(request, response);
     }
 
