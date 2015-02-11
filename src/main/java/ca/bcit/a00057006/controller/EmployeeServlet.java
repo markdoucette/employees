@@ -55,12 +55,11 @@ public class EmployeeServlet extends HttpServlet {
          */
         if (null != request.getParameter("find")) {
             String id = request.getParameter("id");
+            System.out.println("Found: " + employeeFacade.getEmployeeById(id));
         }
 
+
         List<Employee> employees = employeeFacade.getEmployees();
-        for (Employee emp : employees) { // just for testing print to JBoss console
-            System.out.println(emp);
-        }
         request.getSession().setAttribute("employees", employees); // add List to session to be displayed in index.jsp
         request.getRequestDispatcher("/index.jsp").forward(request, response);
     }

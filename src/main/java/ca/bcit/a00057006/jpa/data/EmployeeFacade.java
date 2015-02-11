@@ -5,10 +5,12 @@ import ca.bcit.a00057006.jpa.entity.Employee;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.TypedQuery;
 import java.util.List;
 
 /**
  * Facade for the employee persistence unit
+ * @author Mark Doucette
  */
 public class EmployeeFacade {
     private static final String PERSISTENCE_UNIT = "EmployeePU";
@@ -33,8 +35,12 @@ public class EmployeeFacade {
         return new EmployeeFacade();
     }
 
+    /**
+     * Get a list of all Employees in the A00057006_Employee table
+     * @return a List<Employee>
+     */
     public List<Employee> getEmployees() {
-        return entityManager.createQuery("From A00057006_Employee ", Employee.class).getResultList();
+        return entityManager.createNamedQuery("Employee.getEmployees", Employee.class).getResultList();
     }
 
     /**
@@ -45,5 +51,16 @@ public class EmployeeFacade {
         entityManager.getTransaction().begin();
         entityManager.persist(emp);
         entityManager.getTransaction().commit();
+    }
+
+    /**
+     * Get a single Employee identified by id
+     * @param id the id to use as search criteria
+     * @return the found Employee
+     */
+    public Employee getEmployeeById(String id) {
+        TypedQuery<Employee> query = entityManager.createNamedQuery("Employee.findById", Employee.class);
+        query.setParameter("id", id);
+        return query.getSingleResult();
     }
 }
