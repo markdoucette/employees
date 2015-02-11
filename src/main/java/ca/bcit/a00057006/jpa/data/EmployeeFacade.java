@@ -37,6 +37,10 @@ public class EmployeeFacade {
         return entityManager.createQuery("From A00057006_Employee ", Employee.class).getResultList();
     }
 
+    /**
+     * Add an Employee to the database by simply persisting the object
+     * @param emp the Employee to persist
+     */
     public void addEmployee(Employee emp){
         entityManager.getTransaction().begin();
         entityManager.persist(emp);

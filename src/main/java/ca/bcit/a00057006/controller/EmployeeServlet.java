@@ -49,7 +49,6 @@ public class EmployeeServlet extends HttpServlet {
             employeeFacade.addEmployee(emp);
         }
 
-//        request.setAttribute("employees", employees);
         request.getSession().setAttribute("employees", employees);
         request.getRequestDispatcher("/index.jsp").forward(request, response);
     }
