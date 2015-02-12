@@ -8,17 +8,7 @@
 <body>
 <div id="main-content">
     <h2>Comp 4655 Assignment 01</h2>
-    <%--<article>--%>
-    <%--<div class="table-div">--%>
-    <%--<table>--%>
-    <%--<th>Employee ID:</th><th>First Name</th><th>Last Name</th><th>Date of Birth</th>--%>
-    <%--<c:forEach var="emp" items="${employees}">--%>
-    <%--<tr><td><c:out value="${emp.id}"/></td><td><c:out value="${emp.firstName}"/></td>--%>
-    <%--<td><c:out value="${emp.lastName}" /></td><td>${emp.dateOfBirth}</td></tr>--%>
-    <%--</c:forEach>--%>
-    <%--</table>--%>
-    <%--</div>--%>
-    <%--</article>--%>
+
     <article>
         <h1>Employees List</h1>
 
@@ -37,6 +27,7 @@
         <div class="forms-container">
             <div id="left" class="column">
                 <h1>Add Employee</h1>
+
                 <form action="Employees" method="post">
                     <table>
                         <tr>
@@ -61,8 +52,8 @@
                         </tr>
                         <tr>
                             <td colspan="2">
-                                <c:if test="${not empty addViolation}" >
-                                    <span class="error"><c:out value="${addViolation}" /></span>
+                                <c:if test="${not empty addViolation}">
+                                    <span class="error"><c:out value="${addViolation}"/></span>
                                 </c:if>
                             </td>
                         </tr>
@@ -71,6 +62,7 @@
             </div>
             <div id="centre" class="column">
                 <h1>Find Employee by Id</h1>
+
                 <form action="Employees" method="post">
                     <table>
                         <tr>
@@ -86,9 +78,13 @@
                                 <c:choose>
                                     <c:when test="${foundEmp != null}">
                                         <c:out value="Found ${foundEmp.firstName} ${foundEmp.lastName}"/>
+                                        <br/><br/>
+                                        <span class="good"><c:out value="${findSuccess}"/></span>
                                     </c:when>
-                                    <c:when test="${empty requestScope.foundEmp}">
-                                        <c:out value="Error: No user found by that id"/>
+                                    <c:when test="${not empty foundViolation}">
+                                        <span class="error">
+                                        <c:out value="${foundViolation}"/>
+                                        </span>
                                     </c:when>
                                     <c:otherwise>
                                     </c:otherwise>
@@ -100,6 +96,7 @@
             </div>
             <div id="right" class="column">
                 <h1>Remove Employee</h1>
+
                 <form action="Employees" method="post">
                     <table>
                         <tr>
@@ -110,11 +107,26 @@
                             <td></td>
                             <td><input type="submit" name="remove" value="Remove Employee"/></td>
                         </tr>
+                        <tr>
+                            <td colspan="2">
+                                <c:if test="${not empty removeViolation}">
+                                    <span class="error">
+                                        <c:out value="${removeViolation}"/>
+                                    </span>
+                                </c:if>
+                                <c:if test="${not empty removeSuccess}">
+                                    <span class="good"><c:out value="${removeSuccess}"/></span>
+                                </c:if>
+                            </td>
+                        </tr>
                     </table>
                 </form>
             </div>
         </div>
     </article>
+    <div id="footer">
+        <h3><a href="${pageContext.request.contextPath}/Employees">Refresh</a> </h3>
+    </div>
 </div>
 </body>
 </html>

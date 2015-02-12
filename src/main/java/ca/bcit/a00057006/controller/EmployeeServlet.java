@@ -24,10 +24,13 @@ import java.util.List;
 @WebServlet(name = "EmployeeServlet", urlPatterns = "/Employees")
 public class EmployeeServlet extends HttpServlet {
 
-    public static final String CODE_801 = "Result Code: 801 Description: no match found";
+    public static final String CODE_000 = "Result Code: 000 Description: Success";
+    public static final String CODE_001 = "Result Code: 001 Description: Delete Successful";
+    public static final String CODE_801 = "Result Code: 801 Description: No match found";
     public static final String CODE_902 = "Result Code: 902 Description: Employee already exists in the list";
-    public static final String CODE_901 = "Result Code: 901 Description: invalid user data!";
-    public static final String CODE_903 = "Result Code: 903 Description: invalid date format. Usage: YYYY-MM-DD";
+    public static final String CODE_901 = "Result Code: 901 Description: Invalid user data!";
+    public static final String CODE_903 = "Result Code: 903 Description: Invalid date format. Usage: YYYY-MM-DD";
+    public static final String CODE_904 = "Result Code: 904 Description: Delete unsuccessful";
     public static final String DATE_FORMAT = "yyyy-MM-dd";
 
 
@@ -63,12 +66,12 @@ public class EmployeeServlet extends HttpServlet {
 
                 } catch (ParseException e) {
                     request.setAttribute("addViolation", CODE_903);
-                } catch (RollbackException ex) {
-                    request.setAttribute("addViolation", CODE_902);
                 } catch (NullPointerException ex) {
                     request.setAttribute("addViolation", CODE_901);
                 } catch (ConstraintViolationException ex) {
                     request.setAttribute("addViolation", CODE_901);
+                } catch (RollbackException ex) {
+                    request.setAttribute("addViolation", CODE_902);
                 }
             }
 
@@ -77,13 +80,24 @@ public class EmployeeServlet extends HttpServlet {
             Employee foundEmp = employeeFacade.getEmployeeById(id);
             if (null != foundEmp) {
                 request.setAttribute("foundEmp", foundEmp);
+                request.setAttribute("findSuccess", CODE_000);
             } else {
                 request.setAttribute("foundViolation", CODE_801);
             }
         } else if (null != request.getParameter("remove")) { // Handle the 'remove employee' use case
             String id = request.getParameter("id");
-            // remove the Employee
-            employeeFacade.removeEmployeeById(id);
+
+            if (null == id || "".equals(id)) {
+                request.setAttribute("removeViolation", CODE_904);
+            } else {
+                // remove the Employee
+                try {
+                    employeeFacade.removeEmployeeById(id);
+                    request.setAttribute("removeSuccess", CODE_001);
+                } catch (Exception e) {
+                    request.setAttribute("removeViolation", CODE_904);
+                }
+            }
         }
 
         List<Employee> employees = employeeFacade.getEmployees();

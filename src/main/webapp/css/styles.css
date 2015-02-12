@@ -133,6 +133,13 @@ article .forms-container {
     color: red;
 }
 
+.good {
+     padding: 2px 10px 2px 10px;
+    background-color: limegreen;
+    border: 1px solid darkgreen;
+    color: forestgreen;
+}
+
 #emp-form {
 
 }
