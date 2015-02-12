@@ -2,6 +2,7 @@ package ca.bcit.a00057006.jpa.entity;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.sql.Date;
 
 /**
@@ -13,11 +14,12 @@ import java.sql.Date;
 @Entity
 @Table(name = "A00057006_Employee")
 @NamedQueries({
-        @NamedQuery(name = "Employee.getEmployees", query = "select e from Employee e"),
-        @NamedQuery(name = "Employee.findById", query = "select e from Employee e where e.id = :id")
+        @NamedQuery(name = "Employee.getEmployees", query = "select e from Employee e")
 })
 public class Employee {
     @Id
+    @NotNull
+    @Pattern( regexp = "^[Aa]0[0-9]{7}")
     private String id;
 
     @Column
@@ -25,9 +27,11 @@ public class Employee {
     private String firstName;
 
     @Column
+    @NotNull
     private String lastName;
 
     @Column
+    @NotNull
     private Date dateOfBirth;
 
     public Employee() {

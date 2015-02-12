@@ -36,6 +36,7 @@
     <article>
         <div class="forms-container">
             <div id="left" class="column">
+                <h1>Add Employee</h1>
                 <form action="Employees" method="post">
                     <table>
                         <tr>
@@ -58,10 +59,18 @@
                             <td></td>
                             <td><input type="submit" name="add" value="Add Employee"/></td>
                         </tr>
+                        <tr>
+                            <td colspan="2">
+                                <c:if test="${not empty addViolation}" >
+                                    <span class="error"><c:out value="${addViolation}" /></span>
+                                </c:if>
+                            </td>
+                        </tr>
                     </table>
                 </form>
             </div>
             <div id="centre" class="column">
+                <h1>Find Employee by Id</h1>
                 <form action="Employees" method="post">
                     <table>
                         <tr>
@@ -72,15 +81,25 @@
                             <td></td>
                             <td><input type="submit" name="find" value="Find Employee"/></td>
                         </tr>
-                        <tr><td colspan="2">
-                            <c:if test="${not empty foundEmp}">
-                                <c:out value="Found ${foundEmp.firstName} ${foundEmp.lastName}"/>
-                            </c:if>
-                        </td> </tr>
+                        <tr>
+                            <td colspan="2">
+                                <c:choose>
+                                    <c:when test="${foundEmp != null}">
+                                        <c:out value="Found ${foundEmp.firstName} ${foundEmp.lastName}"/>
+                                    </c:when>
+                                    <c:when test="${empty requestScope.foundEmp}">
+                                        <c:out value="Error: No user found by that id"/>
+                                    </c:when>
+                                    <c:otherwise>
+                                    </c:otherwise>
+                                </c:choose>
+                            </td>
+                        </tr>
                     </table>
                 </form>
             </div>
             <div id="right" class="column">
+                <h1>Remove Employee</h1>
                 <form action="Employees" method="post">
                     <table>
                         <tr>

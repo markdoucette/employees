@@ -3,11 +3,13 @@ package ca.bcit.a00057006.controller;
 import ca.bcit.a00057006.jpa.data.EmployeeFacade;
 import ca.bcit.a00057006.jpa.entity.Employee;
 
+import javax.persistence.RollbackException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.ConstraintViolationException;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -16,9 +18,18 @@ import java.util.List;
 
 /**
  * Servlet for the Employee Entity
+ *
+ * @author Mark Doucette
  */
 @WebServlet(name = "EmployeeServlet", urlPatterns = "/Employees")
 public class EmployeeServlet extends HttpServlet {
+
+    public static final String CODE_801 = "Result Code: 801 Description: no match found";
+    public static final String CODE_902 = "Result Code: 902 Description: Employee already exists in the list";
+    public static final String CODE_901 = "Result Code: 901 Description: invalid user data!";
+    public static final String CODE_903 = "Result Code: 903 Description: invalid date format. Usage: YYYY-MM-DD";
+    public static final String DATE_FORMAT = "yyyy-MM-dd";
+
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         EmployeeFacade employeeFacade = EmployeeFacade.getInstance();
@@ -30,40 +41,46 @@ public class EmployeeServlet extends HttpServlet {
             String id = request.getParameter("id");
             String firstName = request.getParameter("firstName");
             String lastName = request.getParameter("lastName");
-            Date date = null;
-            try {
-                // convert input to SimpleDateFormat to be used with Date
-                date = new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("dob"));
-            } catch (ParseException e) {
-                e.printStackTrace();
+            String dob = request.getParameter("dob");
+
+            if ((null == id) || (null == firstName) || (null == lastName) || (null == dob)) {
+                request.setAttribute("addViolation", CODE_901);
+            } else if ("".equals(id) || "".equals(firstName) || "".equals(lastName) || "".equals(dob)) {
+                request.setAttribute("addViolation", CODE_901);
+            } else {
+
+                Date date = null;
+                try {
+                    // convert input to SimpleDateFormat to be used with Date
+                    date = new SimpleDateFormat(DATE_FORMAT).parse(dob);
+                    Employee emp = new Employee();
+                    emp.setId(id);
+                    emp.setFirstName(firstName);
+                    emp.setLastName(lastName);
+                    // Date must be converted to java.sql.Date for compliance with ms-sql Date type
+                    emp.setDateOfBirth(new java.sql.Date(date.getTime()));
+                    employeeFacade.addEmployee(emp);
+
+                } catch (ParseException e) {
+                    request.setAttribute("addViolation", CODE_903);
+                } catch (RollbackException ex) {
+                    request.setAttribute("addViolation", CODE_902);
+                } catch (NullPointerException ex) {
+                    request.setAttribute("addViolation", CODE_901);
+                } catch (ConstraintViolationException ex) {
+                    request.setAttribute("addViolation", CODE_901);
+                }
             }
 
-            Employee emp = new Employee();
-            emp.setId(id);
-            emp.setFirstName(firstName);
-            emp.setLastName(lastName);
-            // Date must be converted to java.sql.Date for compliance with ms-sql Date type
-            emp.setDateOfBirth(new java.sql.Date(date.getTime()));
-
-            employeeFacade.addEmployee(emp);
-        }
-
-        /*
-        Handle the 'find employee' use case
-         */
-        if (null != request.getParameter("find")) {
+        } else if (null != request.getParameter("find")) { // Handle the 'find employee' use case
             String id = request.getParameter("id");
             Employee foundEmp = employeeFacade.getEmployeeById(id);
             if (null != foundEmp) {
                 request.setAttribute("foundEmp", foundEmp);
+            } else {
+                request.setAttribute("foundViolation", CODE_801);
             }
-            System.out.println("Found: " + employeeFacade.getEmployeeById(id));
-        }
-
-        /*
-        Handle the 'remove employee' use case
-         */
-        if (null != request.getParameter("remove")) {
+        } else if (null != request.getParameter("remove")) { // Handle the 'remove employee' use case
             String id = request.getParameter("id");
             // remove the Employee
             employeeFacade.removeEmployeeById(id);

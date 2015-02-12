@@ -5,8 +5,11 @@ import ca.bcit.a00057006.jpa.entity.Employee;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import javax.persistence.TypedQuery;
+import javax.persistence.RollbackException;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Facade for the employee persistence unit
@@ -18,10 +21,12 @@ public class EmployeeFacade {
     private static EmployeeFacade empFacade; // singleton usage
     private EntityManagerFactory entityManagerFactory;
     private EntityManager entityManager;
+    private ConstraintViolationException cve;
 
     private EmployeeFacade() { // private ctor for singleton
         entityManagerFactory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT);
         entityManager = entityManagerFactory.createEntityManager();
+        cve = null;
     }
 
     /**
@@ -50,8 +55,9 @@ public class EmployeeFacade {
      * Add an Employee to the database by simply persisting the object
      *
      * @param emp the Employee to persist
+     * @throws javax.validation.ConstraintViolationException
      */
-    public void addEmployee(Employee emp) {
+    public void addEmployee(Employee emp) throws RollbackException {
         entityManager.getTransaction().begin();
         entityManager.persist(emp);
         entityManager.getTransaction().commit();
@@ -63,10 +69,14 @@ public class EmployeeFacade {
      * @param id the id to use as search criteria
      * @return the found Employee
      */
+
     public Employee getEmployeeById(String id) {
-        TypedQuery<Employee> query = entityManager.createNamedQuery("Employee.findById", Employee.class);
-        query.setParameter("id", id);
-        return query.getSingleResult();
+        Employee emp;
+        emp = entityManager.find(Employee.class, id);
+        if (null != emp) {
+            return emp;
+        }
+        return null;
     }
 
     /**
@@ -81,5 +91,15 @@ public class EmployeeFacade {
         entityManager.getTransaction().begin();
         entityManager.remove(employee);
         entityManager.getTransaction().commit();
+    }
+
+    /**
+     * Get a set of validation violations for display in another area
+     *
+     * @param cve
+     * @return
+     */
+    public Set<ConstraintViolation<?>> getValidationViolations(ConstraintViolationException cve) {
+        return cve.getConstraintViolations();
     }
 }
